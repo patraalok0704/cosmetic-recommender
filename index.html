@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>Cosmetic Recommendation</title>
+
+</head>
+
+<body>
+
+    <h2>Cosmetic Product Recommendation</h2>
+
+    <label>Enter Ingredient(s):</label>
+
+    <input type="text" id="ingredient"><br><br>
+
+
+
+    <label>Sort by:</label>
+
+    <select id="sort_by">
+
+        <option value="Price">Price (Low to High)</option>
+
+        <option value="Rank">Rating (High to Low)</option>
+
+    </select><br><br>
+
+
+
+    <button onclick="getRecommendations()">Get Recommendations</button>
+
+    <div id="results"></div>
+
+
+
+    <script>
+
+        function getRecommendations() {
+
+            const ingredient = document.getElementById("ingredient").value;
+
+            const sort_by = document.getElementById("sort_by").value;
+
+
+
+            fetch("/recommend", {
+
+                method: "POST",
+
+                headers: { 'Content-Type': 'application/json' },
+
+                body: JSON.stringify({ ingredient, sort_by })
+
+            })
+
+            .then(response => response.json())
+
+            .then(data => {
+
+                let output = "<h3>Top Recommendations:</h3><ul>";
+
+                data.forEach(item => {
+
+                    output += <li><strong>${item.Brand}</strong> - ${item.Name} | Price: ${item.Price} | Rating: ${item.Rank}</li>;
+
+                });
+
+                output += "</ul>";
+
+                document.getElementById("results").innerHTML = output;
+
+            });
+
+        }
+
+    </script>
+
+</body>
+
+</html>
